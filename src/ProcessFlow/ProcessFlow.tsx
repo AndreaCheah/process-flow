@@ -14,6 +14,7 @@ import {
   Card,
   Col,
   Divider,
+  Grid,
   Row,
   Space,
   Statistic,
@@ -22,7 +23,7 @@ import {
 import { useRef, useState, type Dispatch, type SetStateAction } from "react";
 import FlowCanvas from "../components/FlowCanvas";
 import PaginatedTable from "../components/PaginatedTable";
-import "./ProcessFlow.css";
+import { useTheme } from "../contexts/ThemeContext";
 
 const { Title } = Typography;
 
@@ -40,6 +41,9 @@ export type Edge = {
 
 export default function ProcessFlow() {
   const { message } = App.useApp();
+  const { theme } = useTheme();
+  const screens = Grid.useBreakpoint();
+  const isDark = theme === 'dark';
 
   const [nodes, setNodes] = useState<Node[]>([
     { id: "1", name: "Reactor A", type: "type1" },
@@ -190,8 +194,18 @@ export default function ProcessFlow() {
   };
 
   return (
-    <div className="process-flow-container">
-      <Title level={2}>Process Flow Visualization</Title>
+    <div>
+      <Title
+        level={2}
+        style={{
+          marginBottom: '24px',
+          fontWeight: 600,
+          fontSize: screens.md ? '28px' : '24px',
+          color: isDark ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.85)',
+        }}
+      >
+        Process Flow Visualization
+      </Title>
 
       <Row gutter={16} style={{ marginBottom: "24px" }}>
         <Col xs={24} sm={8}>
@@ -233,71 +247,75 @@ export default function ProcessFlow() {
         </Space>
       </Divider>
 
-      <div className="tables-section">
-        <Card
-          title="Node Table"
-          extra={
-            <Space>
-              <Button
-                type="primary"
-                icon={<PlusOutlined />}
-                onClick={handleAddNode}
-              >
-                Add Node
-              </Button>
-              <Button
-                danger
-                icon={<DeleteOutlined />}
-                onClick={handleRemoveNode}
-              >
-                Remove
-              </Button>
-            </Space>
-          }
-        >
-          <PaginatedTable
-            columnDefs={nodeColumns}
-            rowData={nodes}
-            onCellValueChanged={(event) =>
-              handleCellValueChanged(event, setNodes)
+      <Row gutter={[24, 24]} style={{ marginBottom: '32px' }}>
+        <Col xs={24} xl={12}>
+          <Card
+            title="Node Table"
+            extra={
+              <Space>
+                <Button
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={handleAddNode}
+                >
+                  Add Node
+                </Button>
+                <Button
+                  danger
+                  icon={<DeleteOutlined />}
+                  onClick={handleRemoveNode}
+                >
+                  Remove
+                </Button>
+              </Space>
             }
-            rowSelection="multiple"
-            onGridReady={(event) => (nodeGridApiRef.current = event.api)}
-          />
-        </Card>
+          >
+            <PaginatedTable
+              columnDefs={nodeColumns}
+              rowData={nodes}
+              onCellValueChanged={(event) =>
+                handleCellValueChanged(event, setNodes)
+              }
+              rowSelection="multiple"
+              onGridReady={(event) => (nodeGridApiRef.current = event.api)}
+            />
+          </Card>
+        </Col>
 
-        <Card
-          title="Edge Table"
-          extra={
-            <Space>
-              <Button
-                type="primary"
-                icon={<PlusOutlined />}
-                onClick={handleAddEdge}
-              >
-                Add Edge
-              </Button>
-              <Button
-                danger
-                icon={<DeleteOutlined />}
-                onClick={handleRemoveEdge}
-              >
-                Remove
-              </Button>
-            </Space>
-          }
-        >
-          <PaginatedTable
-            columnDefs={edgeColumns}
-            rowData={edges}
-            onCellValueChanged={(event) =>
-              handleCellValueChanged(event, setEdges)
+        <Col xs={24} xl={12}>
+          <Card
+            title="Edge Table"
+            extra={
+              <Space>
+                <Button
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={handleAddEdge}
+                >
+                  Add Edge
+                </Button>
+                <Button
+                  danger
+                  icon={<DeleteOutlined />}
+                  onClick={handleRemoveEdge}
+                >
+                  Remove
+                </Button>
+              </Space>
             }
-            rowSelection="multiple"
-            onGridReady={(event) => (edgeGridApiRef.current = event.api)}
-          />
-        </Card>
-      </div>
+          >
+            <PaginatedTable
+              columnDefs={edgeColumns}
+              rowData={edges}
+              onCellValueChanged={(event) =>
+                handleCellValueChanged(event, setEdges)
+              }
+              rowSelection="multiple"
+              onGridReady={(event) => (edgeGridApiRef.current = event.api)}
+            />
+          </Card>
+        </Col>
+      </Row>
 
       <Divider orientation="left">
         <Space>

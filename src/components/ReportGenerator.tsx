@@ -1,21 +1,24 @@
 import { useState } from 'react';
-import { Card, Form, Input, Button, Upload, Alert, Typography, Space, Row, Col, Divider } from 'antd';
+import { Card, Form, Input, Button, Alert, Typography, Space, Row, Col, Divider } from 'antd';
 import { UploadOutlined, FileTextOutlined, PieChartOutlined, LineChartOutlined } from '@ant-design/icons';
 import type { ExperimentResults } from '../types/reportTypes';
 import { ReportService } from '../services/reportService';
 import { PDFGenerator } from '../services/pdfGenerator';
 import ImpactPieChart from './charts/ImpactPieChart';
 import KPILineChart from './charts/KPILineChart';
-import './ReportGenerator.css';
+import { useTheme } from '../contexts/ThemeContext';
 
 const { Title, Paragraph } = Typography;
 
 export default function ReportGenerator() {
+  const { theme } = useTheme();
   const [apiKey, setApiKey] = useState('');
   const [jsonData, setJsonData] = useState<ExperimentResults | null>(null);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState('');
   const [error, setError] = useState('');
+
+  const isDark = theme === 'dark';
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -72,7 +75,12 @@ export default function ReportGenerator() {
 
   return (
     <div>
-      <Title level={2}>Experiment Report</Title>
+      <Title
+        level={2}
+        style={{ color: isDark ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.85)' }}
+      >
+        Experiment Report
+      </Title>
       <Paragraph type="secondary">
         Upload your experiment JSON results to generate a PDF report
         with AI-powered insights.
