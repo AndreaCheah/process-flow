@@ -2,6 +2,8 @@ import { useState } from 'react';
 import type { ExperimentResults } from '../types/reportTypes';
 import { ReportService } from '../services/reportService';
 import { PDFGenerator } from '../services/pdfGenerator';
+import ImpactPieChart from './charts/ImpactPieChart';
+import KPILineChart from './charts/KPILineChart';
 
 export default function ReportGenerator() {
   const [apiKey, setApiKey] = useState('');
@@ -209,6 +211,35 @@ export default function ReportGenerator() {
           </div>
         )}
       </div>
+
+      {jsonData && (
+        <div style={{ marginTop: '40px' }}>
+          <h2 style={{ marginBottom: '20px', color: '#2c3e50' }}>Analytics Dashboard</h2>
+
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(500px, 1fr))',
+              gap: '20px',
+            }}
+          >
+            <div style={chartCardStyle}>
+              <ImpactPieChart data={jsonData.data} />
+            </div>
+
+            <div style={chartCardStyle}>
+              <KPILineChart data={jsonData.data} />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
+const chartCardStyle = {
+  backgroundColor: 'white',
+  padding: '20px',
+  borderRadius: '8px',
+  boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+};
