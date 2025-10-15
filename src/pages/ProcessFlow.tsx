@@ -43,7 +43,7 @@ export default function ProcessFlow() {
   const { message } = App.useApp();
   const { theme } = useTheme();
   const screens = Grid.useBreakpoint();
-  const isDark = theme === 'dark';
+  const isDark = theme === "dark";
 
   const [nodes, setNodes] = useState<Node[]>([
     { id: "1", name: "Reactor A", type: "type1" },
@@ -198,13 +198,13 @@ export default function ProcessFlow() {
       <Title
         level={2}
         style={{
-          marginBottom: '24px',
+          marginBottom: "24px",
           fontWeight: 600,
-          fontSize: screens.md ? '28px' : '24px',
-          color: isDark ? 'rgba(255, 255, 255, 0.85)' : 'rgba(0, 0, 0, 0.85)',
+          fontSize: screens.md ? "28px" : "24px",
+          color: isDark ? "rgba(255, 255, 255, 0.85)" : "rgba(0, 0, 0, 0.85)",
         }}
       >
-        Process Flow Visualization
+        Process Flow
       </Title>
 
       <Row gutter={16} style={{ marginBottom: "24px" }}>
@@ -247,7 +247,7 @@ export default function ProcessFlow() {
         </Space>
       </Divider>
 
-      <Row gutter={[24, 24]} style={{ marginBottom: '32px' }}>
+      <Row gutter={[24, 24]} style={{ marginBottom: "32px" }}>
         <Col xs={24} xl={12}>
           <Card
             title="Node Table"

@@ -1,16 +1,16 @@
 import {
+  BulbFilled,
+  BulbOutlined,
   DashboardOutlined,
   LineChartOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  BulbOutlined,
-  BulbFilled,
 } from "@ant-design/icons";
-import { Layout, Menu, theme, App as AntApp, Button, Tooltip } from "antd";
+import { App as AntApp, Button, Layout, Menu, theme, Tooltip } from "antd";
 import { useState } from "react";
-import ProcessFlow from "./ProcessFlow/ProcessFlow";
-import ReportGenerator from "./components/ReportGenerator";
 import { useTheme } from "./contexts/ThemeContext";
+import ProcessFlow from "./pages/ProcessFlow";
+import ReportGenerator from "./pages/DataAnalysis";
 
 const { Header, Sider, Content } = Layout;
 
@@ -23,7 +23,7 @@ function App() {
     token: { borderRadiusLG },
   } = theme.useToken();
 
-  const isDark = themeMode === 'dark';
+  const isDark = themeMode === "dark";
 
   return (
     <AntApp>
@@ -47,7 +47,9 @@ function App() {
               fontSize: collapsed ? "16px" : "18px",
               fontWeight: "600",
               transition: "all 0.2s",
-              borderBottom: isDark ? "1px solid #434343" : "1px solid rgba(255, 255, 255, 0.1)",
+              borderBottom: isDark
+                ? "1px solid #434343"
+                : "1px solid rgba(255, 255, 255, 0.1)",
               letterSpacing: collapsed ? "0px" : "0.5px",
             }}
           >
@@ -71,7 +73,7 @@ function App() {
               {
                 key: "2",
                 icon: <LineChartOutlined />,
-                label: "Reports",
+                label: "Data Analysis",
               },
             ]}
           />
@@ -85,7 +87,9 @@ function App() {
               alignItems: "center",
               justifyContent: "space-between",
               borderBottom: isDark ? "1px solid #434343" : "1px solid #f0f0f0",
-              boxShadow: isDark ? "0 2px 8px rgba(0, 0, 0, 0.45)" : "0 2px 8px rgba(0, 0, 0, 0.06)",
+              boxShadow: isDark
+                ? "0 2px 8px rgba(0, 0, 0, 0.45)"
+                : "0 2px 8px rgba(0, 0, 0, 0.06)",
             }}
           >
             <div style={{ display: "flex", alignItems: "center" }}>
@@ -99,7 +103,9 @@ function App() {
                   alignItems: "center",
                   justifyContent: "center",
                   cursor: "pointer",
-                  color: isDark ? "rgba(255, 255, 255, 0.85)" : "rgba(0, 0, 0, 0.85)",
+                  color: isDark
+                    ? "rgba(255, 255, 255, 0.85)"
+                    : "rgba(0, 0, 0, 0.85)",
                   transition: "all 0.2s",
                 }}
                 onMouseEnter={(e) => {
@@ -118,14 +124,18 @@ function App() {
                   margin: 0,
                   fontSize: "18px",
                   fontWeight: "600",
-                  color: isDark ? "rgba(255, 255, 255, 0.85)" : "rgba(0, 0, 0, 0.85)",
+                  color: isDark
+                    ? "rgba(255, 255, 255, 0.85)"
+                    : "rgba(0, 0, 0, 0.85)",
                   letterSpacing: "0.3px",
                 }}
               >
                 Dashboard
               </h1>
             </div>
-            <Tooltip title={isDark ? "Switch to light mode" : "Switch to dark mode"}>
+            <Tooltip
+              title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+            >
               <Button
                 type="text"
                 icon={isDark ? <BulbOutlined /> : <BulbFilled />}

@@ -11,8 +11,8 @@ import ReactFlow, {
   useNodesState,
 } from "reactflow";
 import "reactflow/dist/style.css";
-import type { Edge, Node } from "../ProcessFlow/ProcessFlow";
 import { useTheme } from "../contexts/ThemeContext";
+import type { Edge, Node } from "../pages/ProcessFlow";
 
 interface FlowCanvasProps {
   nodes: Node[];
@@ -21,7 +21,7 @@ interface FlowCanvasProps {
 
 export default function FlowCanvas({ nodes, edges }: FlowCanvasProps) {
   const { theme } = useTheme();
-  const isDark = theme === 'dark';
+  const isDark = theme === "dark";
 
   const flowNodes: FlowNode[] = useMemo(() => {
     return nodes.map((node, index) => {
@@ -46,14 +46,18 @@ export default function FlowCanvas({ nodes, edges }: FlowCanvasProps) {
         data: {
           label: (
             <div style={{ textAlign: "center" }}>
-              <div style={{ fontWeight: "600", fontSize: "13px" }}>{node.name}</div>
-              <div style={{
-                fontSize: "11px",
-                color: "rgba(255, 255, 255, 0.65)",
-                marginTop: "4px",
-                textTransform: "uppercase",
-                letterSpacing: "0.5px"
-              }}>
+              <div style={{ fontWeight: "600", fontSize: "13px" }}>
+                {node.name}
+              </div>
+              <div
+                style={{
+                  fontSize: "11px",
+                  color: "rgba(255, 255, 255, 0.65)",
+                  marginTop: "4px",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.5px",
+                }}
+              >
                 {node.type}
               </div>
             </div>
@@ -95,15 +99,21 @@ export default function FlowCanvas({ nodes, edges }: FlowCanvasProps) {
             color: "#40a9ff",
           },
           label: "→",
-          labelStyle: { fontSize: 12, fontWeight: "bold", fill: "rgba(255, 255, 255, 0.85)" },
+          labelStyle: {
+            fontSize: 12,
+            fontWeight: "bold",
+            fill: "rgba(255, 255, 255, 0.85)",
+          },
           labelBgStyle: { fill: "#1f1f1f", fillOpacity: 0.9 },
         };
       })
       .filter(Boolean) as FlowEdge[];
   }, [edges, nodes]);
 
-  const [reactFlowNodes, setReactFlowNodes, onNodesChange] = useNodesState(flowNodes);
-  const [reactFlowEdges, setReactFlowEdges, onEdgesChange] = useEdgesState(flowEdges);
+  const [reactFlowNodes, setReactFlowNodes, onNodesChange] =
+    useNodesState(flowNodes);
+  const [reactFlowEdges, setReactFlowEdges, onEdgesChange] =
+    useEdgesState(flowEdges);
 
   useEffect(() => {
     setReactFlowNodes(flowNodes);
