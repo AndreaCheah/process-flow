@@ -1,4 +1,8 @@
 import { useState, useRef, type Dispatch, type SetStateAction } from 'react';
+import { Button, Space, Card, Typography, Row, Col, Statistic, message, Divider } from 'antd';
+import { PlusOutlined, DeleteOutlined, NodeIndexOutlined, BranchesOutlined, ApartmentOutlined, TableOutlined, DotChartOutlined } from '@ant-design/icons';
+
+const { Title } = Typography;
 import PaginatedTable from '../components/PaginatedTable';
 import type { ColDef, CellValueChangedEvent, GridApi } from 'ag-grid-community';
 import './ProcessFlow.css';
@@ -100,6 +104,7 @@ export default function ProcessFlow() {
       type: 'type1',
     };
     setNodes([...nodes, newNode]);
+    message.success('Node added successfully!');
   };
 
   const handleAddEdge = () => {
@@ -111,18 +116,19 @@ export default function ProcessFlow() {
       downstreamNode: defaultNode,
     };
     setEdges([...edges, newEdge]);
+    message.success('Edge added successfully!');
   };
 
   const handleRemoveNode = () => {
     if (!nodeGridApiRef.current) {
-      console.log('Grid API not available');
+      message.error('Grid not ready. Please try again.');
       return;
     }
 
     const selectedNodes = nodeGridApiRef.current.getSelectedRows();
 
     if (selectedNodes.length === 0) {
-      alert('Please select at least one node to remove');
+      message.warning('Please select at least one node to remove');
       return;
     }
 
@@ -138,15 +144,20 @@ export default function ProcessFlow() {
               !deletedNodeNames.includes(edge.downstreamNode)
     );
     setEdges(remainingEdges);
+
+    message.success(`${selectedNodes.length} node(s) removed successfully!`);
   };
 
   const handleRemoveEdge = () => {
-    if (!edgeGridApiRef.current) return;
+    if (!edgeGridApiRef.current) {
+      message.error('Grid not ready. Please try again.');
+      return;
+    }
 
     const selectedEdges = edgeGridApiRef.current.getSelectedRows();
 
     if (selectedEdges.length === 0) {
-      alert('Please select at least one edge to remove');
+      message.warning('Please select at least one edge to remove');
       return;
     }
 
@@ -154,25 +165,68 @@ export default function ProcessFlow() {
       edge => !selectedEdges.find(selected => selected.id === edge.id)
     );
     setEdges(remainingEdges);
+
+    message.success(`${selectedEdges.length} edge(s) removed successfully!`);
   };
 
   return (
     <div className="process-flow-container">
-      <h2>Process Flow Visualization</h2>
+      <Title level={2}>Process Flow Visualization</Title>
+
+      <Row gutter={16} style={{ marginBottom: '24px' }}>
+        <Col xs={24} sm={8}>
+          <Card hoverable>
+            <Statistic
+              title="Total Nodes"
+              value={nodes.length}
+              prefix={<NodeIndexOutlined />}
+              valueStyle={{ color: '#1890ff' }}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={8}>
+          <Card hoverable>
+            <Statistic
+              title="Total Edges"
+              value={edges.length}
+              prefix={<BranchesOutlined />}
+              valueStyle={{ color: '#52c41a' }}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={8}>
+          <Card hoverable>
+            <Statistic
+              title="Node Types"
+              value={new Set(nodes.map(n => n.type)).size}
+              prefix={<ApartmentOutlined />}
+              valueStyle={{ color: '#722ed1' }}
+            />
+          </Card>
+        </Col>
+      </Row>
+
+      <Divider orientation="left">
+        <Space>
+          <TableOutlined />
+          <span>Data Tables</span>
+        </Space>
+      </Divider>
 
       <div className="tables-section">
-        <div className="table-wrapper">
-          <div className="table-header">
-            <h3>Node Table</h3>
-            <div className="table-actions">
-              <button className="btn-add" onClick={handleAddNode}>
-                + Add Node
-              </button>
-              <button className="btn-remove" onClick={handleRemoveNode}>
-                - Remove
-              </button>
-            </div>
-          </div>
+        <Card
+          title="Node Table"
+          extra={
+            <Space>
+              <Button type="primary" icon={<PlusOutlined />} onClick={handleAddNode}>
+                Add Node
+              </Button>
+              <Button danger icon={<DeleteOutlined />} onClick={handleRemoveNode}>
+                Remove
+              </Button>
+            </Space>
+          }
+        >
           <PaginatedTable
             columnDefs={nodeColumns}
             rowData={nodes}
@@ -180,20 +234,21 @@ export default function ProcessFlow() {
             rowSelection="multiple"
             onGridReady={(event) => (nodeGridApiRef.current = event.api)}
           />
-        </div>
+        </Card>
 
-        <div className="table-wrapper">
-          <div className="table-header">
-            <h3>Edge Table</h3>
-            <div className="table-actions">
-              <button className="btn-add" onClick={handleAddEdge}>
-                + Add Edge
-              </button>
-              <button className="btn-remove" onClick={handleRemoveEdge}>
-                - Remove
-              </button>
-            </div>
-          </div>
+        <Card
+          title="Edge Table"
+          extra={
+            <Space>
+              <Button type="primary" icon={<PlusOutlined />} onClick={handleAddEdge}>
+                Add Edge
+              </Button>
+              <Button danger icon={<DeleteOutlined />} onClick={handleRemoveEdge}>
+                Remove
+              </Button>
+            </Space>
+          }
+        >
           <PaginatedTable
             columnDefs={edgeColumns}
             rowData={edges}
@@ -201,11 +256,17 @@ export default function ProcessFlow() {
             rowSelection="multiple"
             onGridReady={(event) => (edgeGridApiRef.current = event.api)}
           />
-        </div>
+        </Card>
       </div>
 
-      <div className="canvas-section">
-        <h3>Canvas Visualization</h3>
+      <Divider orientation="left">
+        <Space>
+          <DotChartOutlined />
+          <span>Canvas Visualization</span>
+        </Space>
+      </Divider>
+
+      <Card>
         <div className="canvas-placeholder">
           <p>Canvas visualization will be displayed here</p>
           <div className="node-list">
@@ -229,7 +290,7 @@ export default function ProcessFlow() {
             </ul>
           </div>
         </div>
-      </div>
+      </Card>
     </div>
   );
 }

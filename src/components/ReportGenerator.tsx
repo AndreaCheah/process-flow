@@ -1,9 +1,13 @@
 import { useState } from 'react';
+import { Card, Form, Input, Button, Upload, Alert, Typography, Space, Row, Col, Divider } from 'antd';
+import { UploadOutlined, FileTextOutlined, PieChartOutlined, LineChartOutlined } from '@ant-design/icons';
 import type { ExperimentResults } from '../types/reportTypes';
 import { ReportService } from '../services/reportService';
 import { PDFGenerator } from '../services/pdfGenerator';
 import ImpactPieChart from './charts/ImpactPieChart';
 import KPILineChart from './charts/KPILineChart';
+
+const { Title, Paragraph } = Typography;
 
 export default function ReportGenerator() {
   const [apiKey, setApiKey] = useState('');
@@ -66,153 +70,127 @@ export default function ReportGenerator() {
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
-      <h2>Experiment Report Generator</h2>
-      <p style={{ color: '#666', fontSize: '14px' }}>
+    <div>
+      <Title level={2}>Experiment Report Generator</Title>
+      <Paragraph type="secondary">
         Upload your experiment JSON results or use mock data to generate a comprehensive PDF report
         with AI-powered insights.
-      </p>
+      </Paragraph>
 
-      <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
-        <div>
-          <label htmlFor="apiKey" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-            Gemini API Key:
-          </label>
-          <input
-            id="apiKey"
-            type="password"
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
-            placeholder="Enter your Gemini API key"
-            style={{
-              width: '100%',
-              padding: '8px',
-              fontSize: '14px',
-              border: '1px solid #ccc',
-              borderRadius: '4px',
-            }}
-          />
-        </div>
+      <Card style={{ marginBottom: '24px' }}>
+        <Form layout="vertical">
+          <Form.Item
+            label="Gemini API Key"
+            required
+            tooltip="Your Google Gemini API key for AI-powered insights"
+          >
+            <Input.Password
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              placeholder="Enter your Gemini API key"
+              size="large"
+            />
+          </Form.Item>
 
-        <div>
-          <label htmlFor="fileUpload" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-            Upload JSON File:
-          </label>
-          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <Form.Item
+            label="Upload JSON File"
+            required
+            tooltip="Upload your experiment results in JSON format"
+          >
             <input
-              id="fileUpload"
               type="file"
               accept=".json"
               onChange={handleFileUpload}
-              style={{
-                flex: 1,
-                padding: '8px',
-                fontSize: '14px',
-                border: '1px solid #ccc',
-                borderRadius: '4px',
-              }}
+              style={{ display: 'none' }}
+              id="file-upload"
             />
-          </div>
-        </div>
+            <Button
+              icon={<UploadOutlined />}
+              onClick={() => document.getElementById('file-upload')?.click()}
+              block
+              size="large"
+            >
+              Choose JSON File
+            </Button>
+          </Form.Item>
 
-        <button
-          onClick={generateReport}
-          disabled={loading || !jsonData || !apiKey}
-          style={{
-            padding: '12px 24px',
-            fontSize: '16px',
-            fontWeight: 'bold',
-            color: 'white',
-            backgroundColor: loading || !jsonData || !apiKey ? '#ccc' : '#007bff',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: loading || !jsonData || !apiKey ? 'not-allowed' : 'pointer',
-          }}
-        >
-          {loading ? 'Generating Report...' : 'Generate PDF Report'}
-        </button>
+          <Form.Item>
+            <Button
+              type="primary"
+              icon={<FileTextOutlined />}
+              onClick={generateReport}
+              disabled={loading || !jsonData || !apiKey}
+              loading={loading}
+              size="large"
+              block
+            >
+              {loading ? 'Generating Report...' : 'Generate PDF Report'}
+            </Button>
+          </Form.Item>
+        </Form>
 
         {status && (
-          <div
-            style={{
-              padding: '10px',
-              backgroundColor: '#d4edda',
-              color: '#155724',
-              border: '1px solid #c3e6cb',
-              borderRadius: '4px',
-            }}
-          >
-            {status}
-          </div>
+          <Alert
+            message="Success"
+            description={status}
+            type="success"
+            showIcon
+            closable
+            style={{ marginTop: '16px' }}
+          />
         )}
 
         {error && (
-          <div
-            style={{
-              padding: '10px',
-              backgroundColor: '#f8d7da',
-              color: '#721c24',
-              border: '1px solid #f5c6cb',
-              borderRadius: '4px',
-            }}
-          >
-            <strong>Error:</strong> {error}
-          </div>
+          <Alert
+            message="Error"
+            description={error}
+            type="error"
+            showIcon
+            closable
+            style={{ marginTop: '16px' }}
+          />
         )}
 
         {jsonData && (
-          <div
-            style={{
-              marginTop: '10px',
-              padding: '15px',
-              backgroundColor: '#f8f9fa',
-              border: '1px solid #dee2e6',
-              borderRadius: '4px',
-            }}
-          >
-            <h4 style={{ margin: '0 0 10px 0' }}>Loaded Data Summary:</h4>
-            <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '14px' }}>
-              <li>Total Scenarios: {jsonData.data.simulated_summary.simulated_data.length}</li>
-              <li>Top Variables: {jsonData.data.top_variables.length}</li>
-              <li>KPI: {jsonData.data.simulated_summary.simulated_data[0]?.kpi || 'N/A'}</li>
-              <li>
-                KPI Range:{' '}
+          <Card type="inner" title="Loaded Data Summary" style={{ marginTop: '16px' }}>
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <div><strong>Total Scenarios:</strong> {jsonData.data.simulated_summary.simulated_data.length}</div>
+              <div><strong>Top Variables:</strong> {jsonData.data.top_variables.length}</div>
+              <div><strong>KPI:</strong> {jsonData.data.simulated_summary.simulated_data[0]?.kpi || 'N/A'}</div>
+              <div>
+                <strong>KPI Range:</strong>{' '}
                 {Math.min(...jsonData.data.simulated_summary.simulated_data.map((s) => s.kpi_value)).toFixed(2)} -{' '}
                 {Math.max(...jsonData.data.simulated_summary.simulated_data.map((s) => s.kpi_value)).toFixed(2)}
-              </li>
-            </ul>
-          </div>
+              </div>
+            </Space>
+          </Card>
         )}
-      </div>
+      </Card>
 
       {jsonData && (
-        <div style={{ marginTop: '40px' }}>
-          <h2 style={{ marginBottom: '20px', color: '#2c3e50' }}>Analytics Dashboard</h2>
+        <div>
+          <Divider orientation="left">
+            <Space>
+              <PieChartOutlined />
+              <span>Analytics Dashboard</span>
+            </Space>
+          </Divider>
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(500px, 1fr))',
-              gap: '20px',
-            }}
-          >
-            <div style={chartCardStyle}>
-              <ImpactPieChart data={jsonData.data} />
-            </div>
+          <Row gutter={[16, 16]}>
+            <Col xs={24} lg={12}>
+              <Card hoverable title={<Space><PieChartOutlined /> Variable Impact Distribution</Space>}>
+                <ImpactPieChart data={jsonData.data} />
+              </Card>
+            </Col>
 
-            <div style={chartCardStyle}>
-              <KPILineChart data={jsonData.data} />
-            </div>
-          </div>
+            <Col xs={24} lg={12}>
+              <Card hoverable title={<Space><LineChartOutlined /> KPI Trend Analysis</Space>}>
+                <KPILineChart data={jsonData.data} />
+              </Card>
+            </Col>
+          </Row>
         </div>
       )}
     </div>
   );
 }
-
-const chartCardStyle = {
-  backgroundColor: 'white',
-  padding: '20px',
-  borderRadius: '8px',
-  boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-};
