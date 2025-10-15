@@ -209,7 +209,7 @@ export default function ProcessFlow() {
 
       <Row gutter={16} style={{ marginBottom: "24px" }}>
         <Col xs={24} sm={8}>
-          <Card hoverable>
+          <Card hoverable key={`nodes-card-${theme}`}>
             <Statistic
               title="Total Nodes"
               value={nodes.length}
@@ -219,7 +219,7 @@ export default function ProcessFlow() {
           </Card>
         </Col>
         <Col xs={24} sm={8}>
-          <Card hoverable>
+          <Card hoverable key={`edges-card-${theme}`}>
             <Statistic
               title="Total Edges"
               value={edges.length}
@@ -229,7 +229,7 @@ export default function ProcessFlow() {
           </Card>
         </Col>
         <Col xs={24} sm={8}>
-          <Card hoverable>
+          <Card hoverable key={`types-card-${theme}`}>
             <Statistic
               title="Node Types"
               value={new Set(nodes.map((n) => n.type)).size}
@@ -257,6 +257,7 @@ export default function ProcessFlow() {
                   type="primary"
                   icon={<PlusOutlined />}
                   onClick={handleAddNode}
+                  style={{ opacity: 0.85 }}
                 >
                   Add Node
                 </Button>
@@ -291,6 +292,7 @@ export default function ProcessFlow() {
                   type="primary"
                   icon={<PlusOutlined />}
                   onClick={handleAddEdge}
+                  style={{ opacity: 0.85 }}
                 >
                   Add Edge
                 </Button>

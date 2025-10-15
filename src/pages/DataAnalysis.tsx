@@ -12,6 +12,7 @@ import {
   Divider,
   Form,
   Input,
+  message,
   Row,
   Space,
   Typography,
@@ -107,40 +108,46 @@ export default function ReportGenerator() {
 
       <Card style={{ marginBottom: "24px" }}>
         <Form layout="vertical">
-          <Form.Item
-            label="Gemini API Key"
-            required
-            tooltip="Your Google Gemini API key for AI-powered insights"
-          >
-            <Input.Password
-              value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
-              placeholder="Enter your Gemini API key"
-              size="large"
-            />
-          </Form.Item>
+          <Row gutter={16}>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Gemini API Key"
+                required
+                tooltip="Your Google Gemini API key for AI-powered insights"
+              >
+                <Input.Password
+                  value={apiKey}
+                  onChange={(e) => setApiKey(e.target.value)}
+                  placeholder="Enter your Gemini API key"
+                  size="large"
+                />
+              </Form.Item>
+            </Col>
 
-          <Form.Item
-            label="Upload JSON File"
-            required
-            tooltip="Upload your experiment results in JSON format"
-          >
-            <input
-              type="file"
-              accept=".json"
-              onChange={handleFileUpload}
-              style={{ display: "none" }}
-              id="file-upload"
-            />
-            <Button
-              icon={<UploadOutlined />}
-              onClick={() => document.getElementById("file-upload")?.click()}
-              block
-              size="large"
-            >
-              Choose JSON File
-            </Button>
-          </Form.Item>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Upload JSON File"
+                required
+                tooltip="Upload your experiment results in JSON format"
+              >
+                <input
+                  type="file"
+                  accept=".json"
+                  onChange={handleFileUpload}
+                  style={{ display: "none" }}
+                  id="file-upload"
+                />
+                <Button
+                  icon={<UploadOutlined />}
+                  onClick={() => document.getElementById("file-upload")?.click()}
+                  block
+                  size="large"
+                >
+                  Choose JSON File
+                </Button>
+              </Form.Item>
+            </Col>
+          </Row>
 
           <Form.Item>
             <Button
@@ -185,35 +192,131 @@ export default function ReportGenerator() {
             title="Loaded Data Summary"
             style={{ marginTop: "16px" }}
           >
-            <Space direction="vertical" style={{ width: "100%" }}>
-              <div>
-                <strong>Total Scenarios:</strong>{" "}
-                {jsonData.data.simulated_summary.simulated_data.length}
-              </div>
-              <div>
-                <strong>Top Variables:</strong>{" "}
-                {jsonData.data.top_variables.length}
-              </div>
-              <div>
-                <strong>KPI:</strong>{" "}
-                {jsonData.data.simulated_summary.simulated_data[0]?.kpi ||
-                  "N/A"}
-              </div>
-              <div>
-                <strong>KPI Range:</strong>{" "}
-                {Math.min(
-                  ...jsonData.data.simulated_summary.simulated_data.map(
-                    (s) => s.kpi_value
-                  )
-                ).toFixed(2)}{" "}
-                -{" "}
-                {Math.max(
-                  ...jsonData.data.simulated_summary.simulated_data.map(
-                    (s) => s.kpi_value
-                  )
-                ).toFixed(2)}
-              </div>
-            </Space>
+            <Row gutter={[24, 24]}>
+              <Col xs={24} md={12}>
+                <div style={{ marginBottom: "24px" }}>
+                  <div
+                    style={{
+                      fontSize: "14px",
+                      color: isDark
+                        ? "rgba(255, 255, 255, 0.45)"
+                        : "rgba(0, 0, 0, 0.45)",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    KPI
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "18px",
+                      fontWeight: 600,
+                      color: isDark
+                        ? "rgba(255, 255, 255, 0.85)"
+                        : "rgba(0, 0, 0, 0.85)",
+                    }}
+                  >
+                    {jsonData.data.simulated_summary.simulated_data[0]?.kpi ||
+                      "N/A"}
+                  </div>
+                </div>
+
+                <div style={{ marginBottom: "24px" }}>
+                  <div
+                    style={{
+                      fontSize: "14px",
+                      color: isDark
+                        ? "rgba(255, 255, 255, 0.45)"
+                        : "rgba(0, 0, 0, 0.45)",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    Total Scenarios
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "18px",
+                      fontWeight: 600,
+                      color: isDark
+                        ? "rgba(255, 255, 255, 0.85)"
+                        : "rgba(0, 0, 0, 0.85)",
+                    }}
+                  >
+                    {jsonData.data.simulated_summary.simulated_data.length}
+                  </div>
+                </div>
+
+                <div>
+                  <div
+                    style={{
+                      fontSize: "14px",
+                      color: isDark
+                        ? "rgba(255, 255, 255, 0.45)"
+                        : "rgba(0, 0, 0, 0.45)",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    KPI Range
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "18px",
+                      fontWeight: 600,
+                      color: isDark
+                        ? "rgba(255, 255, 255, 0.85)"
+                        : "rgba(0, 0, 0, 0.85)",
+                    }}
+                  >
+                    {Math.min(
+                      ...jsonData.data.simulated_summary.simulated_data.map(
+                        (s) => s.kpi_value
+                      )
+                    ).toFixed(2)}{" "}
+                    -{" "}
+                    {Math.max(
+                      ...jsonData.data.simulated_summary.simulated_data.map(
+                        (s) => s.kpi_value
+                      )
+                    ).toFixed(2)}
+                  </div>
+                </div>
+              </Col>
+
+              <Col xs={24} md={12}>
+                <div>
+                  <div
+                    style={{
+                      fontSize: "14px",
+                      color: isDark
+                        ? "rgba(255, 255, 255, 0.45)"
+                        : "rgba(0, 0, 0, 0.45)",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    Variables
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "16px",
+                      fontWeight: 600,
+                      color: isDark
+                        ? "rgba(255, 255, 255, 0.85)"
+                        : "rgba(0, 0, 0, 0.85)",
+                    }}
+                  >
+                    {jsonData.data.top_variables.map((v, index) => (
+                      <div
+                        key={index}
+                        style={{
+                          marginBottom: index < jsonData.data.top_variables.length - 1 ? "8px" : 0,
+                        }}
+                      >
+                        {v.equipment} - {v.name}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </Col>
+            </Row>
           </Card>
         )}
       </Card>
