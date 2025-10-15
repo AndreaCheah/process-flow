@@ -1,4 +1,5 @@
 import ProcessFlow from "./ProcessFlow/ProcessFlow";
+import ReportGenerator from "./components/ReportGenerator";
 
 function App() {
   return (
@@ -7,6 +8,7 @@ function App() {
         Process First LLC
       </h1>
       <ProcessFlow />
+      <ReportGenerator />
     </div>
   );
 }
