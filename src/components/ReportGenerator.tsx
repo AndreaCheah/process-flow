@@ -71,9 +71,9 @@ export default function ReportGenerator() {
 
   return (
     <div>
-      <Title level={2}>Experiment Report Generator</Title>
+      <Title level={2}>Experiment Report</Title>
       <Paragraph type="secondary">
-        Upload your experiment JSON results or use mock data to generate a comprehensive PDF report
+        Upload your experiment JSON results to generate a PDF report
         with AI-powered insights.
       </Paragraph>
 

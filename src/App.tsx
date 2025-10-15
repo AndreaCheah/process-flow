@@ -16,23 +16,33 @@ function App() {
   const [selectedKey, setSelectedKey] = useState("1");
 
   const {
-    token: { colorBgContainer, borderRadiusLG },
+    token: { borderRadiusLG },
   } = theme.useToken();
 
   return (
     <AntApp>
       <Layout style={{ minHeight: "100vh" }}>
-        <Sider trigger={null} collapsible collapsed={collapsed}>
+        <Sider
+          trigger={null}
+          collapsible
+          collapsed={collapsed}
+          style={{
+            background: "#141414",
+            borderRight: "1px solid #434343",
+          }}
+        >
           <div
             style={{
               height: 64,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "white",
-              fontSize: collapsed ? "18px" : "20px",
-              fontWeight: "bold",
+              color: "rgba(255, 255, 255, 0.85)",
+              fontSize: collapsed ? "16px" : "18px",
+              fontWeight: "600",
               transition: "all 0.2s",
+              borderBottom: "1px solid #434343",
+              letterSpacing: collapsed ? "0px" : "0.5px",
             }}
           >
             {collapsed ? "PF" : "Process First"}
@@ -42,6 +52,10 @@ function App() {
             mode="inline"
             selectedKeys={[selectedKey]}
             onSelect={({ key }) => setSelectedKey(key)}
+            style={{
+              background: "#141414",
+              border: "none",
+            }}
             items={[
               {
                 key: "1",
@@ -60,9 +74,11 @@ function App() {
           <Header
             style={{
               padding: 0,
-              background: colorBgContainer,
+              background: "#141414",
               display: "flex",
               alignItems: "center",
+              borderBottom: "1px solid #434343",
+              boxShadow: "0 2px 8px rgba(0, 0, 0, 0.45)",
             }}
           >
             <div
@@ -75,21 +91,38 @@ function App() {
                 alignItems: "center",
                 justifyContent: "center",
                 cursor: "pointer",
+                color: "rgba(255, 255, 255, 0.85)",
+                transition: "all 0.2s",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(255, 255, 255, 0.08)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
               }}
             >
               {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             </div>
-            <h1 style={{ margin: 0, fontSize: "20px", fontWeight: "normal" }}>
-              Process First LLC - Dashboard
+            <h1
+              style={{
+                margin: 0,
+                fontSize: "18px",
+                fontWeight: "600",
+                color: "rgba(255, 255, 255, 0.85)",
+                letterSpacing: "0.3px",
+              }}
+            >
+              Dashboard
             </h1>
           </Header>
           <Content
             style={{
-              margin: "24px 16px",
-              padding: 24,
+              margin: "24px",
+              padding: "32px",
               minHeight: 280,
-              background: colorBgContainer,
+              background: "#141414",
               borderRadius: borderRadiusLG,
+              border: "1px solid #434343",
             }}
           >
             {selectedKey === "1" && <ProcessFlow />}

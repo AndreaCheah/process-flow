@@ -10,6 +10,19 @@ interface PaginatedTableProps<T = any> {
   onGridReady?: (event: GridReadyEvent<T>) => void;
 }
 
+const darkTheme = themeQuartz.withParams({
+  backgroundColor: '#141414',
+  foregroundColor: 'rgba(255, 255, 255, 0.85)',
+  headerBackgroundColor: '#1f1f1f',
+  headerTextColor: 'rgba(255, 255, 255, 0.85)',
+  oddRowBackgroundColor: '#141414',
+  rowHoverColor: 'rgba(24, 144, 255, 0.08)',
+  selectedRowBackgroundColor: 'rgba(24, 144, 255, 0.15)',
+  borderColor: '#434343',
+  wrapperBorderRadius: '8px',
+  spacing: '8px',
+});
+
 export default function PaginatedTable<T = any>({
   columnDefs,
   rowData,
@@ -19,7 +32,7 @@ export default function PaginatedTable<T = any>({
 }: PaginatedTableProps<T>) {
   return (
     <AgGridReact<T>
-      theme={themeQuartz}
+      theme={darkTheme}
       columnDefs={columnDefs}
       rowData={rowData}
       domLayout='autoHeight'
