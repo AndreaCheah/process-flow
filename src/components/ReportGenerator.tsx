@@ -31,18 +31,6 @@ export default function ReportGenerator() {
     reader.readAsText(file);
   };
 
-  const loadMockData = async () => {
-    try {
-      const response = await fetch('/data/mock_results.json');
-      const json = await response.json();
-      setJsonData(json);
-      setStatus('Mock data loaded successfully');
-      setError('');
-    } catch (err) {
-      setError('Failed to load mock data');
-    }
-  };
-
   const generateReport = async () => {
     if (!apiKey.trim()) {
       setError('Please enter your Gemini API key');
@@ -124,21 +112,6 @@ export default function ReportGenerator() {
                 borderRadius: '4px',
               }}
             />
-            <button
-              onClick={loadMockData}
-              style={{
-                padding: '8px 16px',
-                fontSize: '14px',
-                color: 'white',
-                backgroundColor: '#6c757d',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              Load Mock Data
-            </button>
           </div>
         </div>
 

@@ -107,8 +107,6 @@ export default function KPILineChart({ data }: KPILineChartProps) {
             const scenarioIndex = context.dataIndex;
             const kpiValue = sortedScenarios[scenarioIndex].kpi_value;
             const allKPIs = sortedScenarios.map(s => s.kpi_value);
-            const maxKPI = Math.max(...allKPIs);
-            const minKPI = Math.min(...allKPIs);
             const rank = allKPIs.sort((a, b) => b - a).indexOf(kpiValue) + 1;
 
             return `\nRank: #${rank} of ${scenarios.length}`;
