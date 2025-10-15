@@ -6,6 +6,7 @@ import { ReportService } from '../services/reportService';
 import { PDFGenerator } from '../services/pdfGenerator';
 import ImpactPieChart from './charts/ImpactPieChart';
 import KPILineChart from './charts/KPILineChart';
+import './ReportGenerator.css';
 
 const { Title, Paragraph } = Typography;
 

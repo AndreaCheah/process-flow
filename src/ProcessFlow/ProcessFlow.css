@@ -2,9 +2,18 @@
   padding: 0;
 }
 
+/* Dark theme title */
+[data-theme='dark'] .process-flow-container h2 {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Light theme title */
+[data-theme='light'] .process-flow-container h2 {
+  color: rgba(0, 0, 0, 0.85);
+}
+
 .process-flow-container h2 {
   margin-bottom: 24px;
-  color: rgba(255, 255, 255, 0.85);
   font-weight: 600;
   font-size: 28px;
 }

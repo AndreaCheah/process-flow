@@ -12,6 +12,7 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 import type { Edge, Node } from "../ProcessFlow/ProcessFlow";
+import { useTheme } from "../contexts/ThemeContext";
 
 interface FlowCanvasProps {
   nodes: Node[];
@@ -19,6 +20,9 @@ interface FlowCanvasProps {
 }
 
 export default function FlowCanvas({ nodes, edges }: FlowCanvasProps) {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
   const flowNodes: FlowNode[] = useMemo(() => {
     return nodes.map((node, index) => {
       const x = (index % 3) * 250 + 100;
@@ -117,10 +121,10 @@ export default function FlowCanvas({ nodes, edges }: FlowCanvasProps) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#0a0a0a",
+          background: isDark ? "#0a0a0a" : "#f5f5f5",
           borderRadius: "8px",
-          color: "rgba(255, 255, 255, 0.45)",
-          border: "1px solid #434343",
+          color: isDark ? "rgba(255, 255, 255, 0.45)" : "rgba(0, 0, 0, 0.45)",
+          border: isDark ? "1px solid #434343" : "1px solid #d9d9d9",
         }}
       >
         No nodes to display. Add some nodes to see the graph visualization.
@@ -132,10 +136,10 @@ export default function FlowCanvas({ nodes, edges }: FlowCanvasProps) {
     <div
       style={{
         height: "550px",
-        border: "1px solid #434343",
+        border: isDark ? "1px solid #434343" : "1px solid #d9d9d9",
         borderRadius: "8px",
         overflow: "hidden",
-        background: "#0a0a0a",
+        background: isDark ? "#0a0a0a" : "#fafafa",
       }}
     >
       <ReactFlow
@@ -146,7 +150,7 @@ export default function FlowCanvas({ nodes, edges }: FlowCanvasProps) {
         fitView
         attributionPosition="bottom-left"
         style={{
-          background: "#0a0a0a",
+          background: isDark ? "#0a0a0a" : "#fafafa",
         }}
       >
         <Controls />
@@ -156,17 +160,17 @@ export default function FlowCanvas({ nodes, edges }: FlowCanvasProps) {
             return style?.background || "#1890ff";
           }}
           style={{
-            background: "#141414",
-            border: "1px solid #434343",
+            background: isDark ? "#141414" : "#ffffff",
+            border: isDark ? "1px solid #434343" : "1px solid #d9d9d9",
           }}
-          maskColor="rgba(0, 0, 0, 0.6)"
+          maskColor={isDark ? "rgba(0, 0, 0, 0.6)" : "rgba(0, 0, 0, 0.1)"}
         />
         <Background
           variant={BackgroundVariant.Dots}
           gap={16}
           size={1}
-          color="#434343"
-          style={{ background: "#0a0a0a" }}
+          color={isDark ? "#434343" : "#e0e0e0"}
+          style={{ background: isDark ? "#0a0a0a" : "#fafafa" }}
         />
       </ReactFlow>
     </div>

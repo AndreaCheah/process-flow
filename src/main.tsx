@@ -3,15 +3,19 @@ import { createRoot } from 'react-dom/client';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { ConfigProvider, theme } from 'antd';
 import App from './App.tsx';
+import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 import './index.css';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+function ThemedApp() {
+  const { theme: themeMode } = useTheme();
+  const isDark = themeMode === 'dark';
+
+  return (
     <ConfigProvider
       theme={{
-        algorithm: theme.darkAlgorithm,
+        algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
         token: {
           colorPrimary: '#1890ff',
           colorSuccess: '#52c41a',
@@ -23,19 +27,27 @@ createRoot(document.getElementById('root')!).render(
         },
         components: {
           Layout: {
-            headerBg: '#141414',
-            siderBg: '#141414',
-            bodyBg: '#000000',
+            headerBg: isDark ? '#141414' : '#ffffff',
+            siderBg: isDark ? '#141414' : '#001529',
+            bodyBg: isDark ? '#000000' : '#f0f2f5',
           },
           Card: {
-            colorBgContainer: '#141414',
-            colorBorderSecondary: '#303030',
-            colorBorder: '#303030',
+            colorBgContainer: isDark ? '#141414' : '#ffffff',
+            colorBorderSecondary: isDark ? '#303030' : '#d9d9d9',
+            colorBorder: isDark ? '#303030' : '#d9d9d9',
           },
         },
       }}
     >
       <App />
     </ConfigProvider>
+  );
+}
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <ThemeProvider>
+      <ThemedApp />
+    </ThemeProvider>
   </StrictMode>,
 )
