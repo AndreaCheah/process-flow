@@ -12,7 +12,6 @@ import {
   Divider,
   Form,
   Input,
-  message,
   Row,
   Space,
   Typography,
@@ -21,8 +20,9 @@ import { useState } from "react";
 import ImpactPieChart from "../components/charts/ImpactPieChart";
 import KPILineChart from "../components/charts/KPILineChart";
 import { useTheme } from "../contexts/ThemeContext";
+import { ReportService } from "../services/geminiReportService";
 import { PDFGenerator } from "../services/pdfGenerator";
-import { ReportService } from "../services/reportService";
+import { ChartImageGenerator } from "../services/chartImageGenerator";
 import type { ExperimentResults } from "../types/reportTypes";
 
 const { Title, Paragraph } = Typography;
@@ -76,9 +76,24 @@ export default function ReportGenerator() {
       const reportService = new ReportService(apiKey);
       const insights = await reportService.generateInsights(jsonData.data);
 
+      setStatus("Generating charts...");
+      const chartGen = new ChartImageGenerator();
+      const [pieChart, lineChart, comparisonChart] = await Promise.all([
+        chartGen.generateImpactPieChart(jsonData.data),
+        chartGen.generateKPILineChart(jsonData.data),
+        chartGen.generateScenarioComparisonChart(jsonData.data),
+      ]);
+
+      // Clean up chart generator
+      chartGen.destroy();
+
       setStatus("Creating PDF report...");
       const pdfGenerator = new PDFGenerator();
-      pdfGenerator.generateReport(jsonData.data, insights);
+      pdfGenerator.generateReport(jsonData.data, insights, {
+        pieChart,
+        lineChart,
+        comparisonChart,
+      });
 
       setStatus("Report generated successfully! Check your downloads folder.");
       setError("");
@@ -103,7 +118,8 @@ export default function ReportGenerator() {
         Data Analysis
       </Title>
       <Paragraph type="secondary">
-        Upload your JSON results to generate a PDF report and data visualisation.
+        Upload your JSON results to generate a PDF report and data
+        visualisation.
       </Paragraph>
 
       <Card style={{ marginBottom: "24px" }}>
@@ -139,7 +155,9 @@ export default function ReportGenerator() {
                 />
                 <Button
                   icon={<UploadOutlined />}
-                  onClick={() => document.getElementById("file-upload")?.click()}
+                  onClick={() =>
+                    document.getElementById("file-upload")?.click()
+                  }
                   block
                   size="large"
                 >
@@ -307,7 +325,10 @@ export default function ReportGenerator() {
                       <div
                         key={index}
                         style={{
-                          marginBottom: index < jsonData.data.top_variables.length - 1 ? "8px" : 0,
+                          marginBottom:
+                            index < jsonData.data.top_variables.length - 1
+                              ? "8px"
+                              : 0,
                         }}
                       >
                         {v.equipment} - {v.name}
