@@ -29,4 +29,4 @@ npm run dev
 
 4. Create a free Gemini API key at https://aistudio.google.com/api-keys.
 
-5. On this app, to generate a PDF report, copy and paste the key into the input field.
+5. In the application, paste your API key into the designated input field when generating a PDF report.
