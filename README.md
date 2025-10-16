@@ -1,3 +1,6 @@
+# Dashboard
+Dashboard for Process First LLC. Contains nodes and edges visualisation, report generation, and data visualisation.
+
 ## Tech Stack
 - React
 - TypeScript
