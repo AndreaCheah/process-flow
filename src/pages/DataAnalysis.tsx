@@ -17,8 +17,9 @@ import {
   Typography,
 } from "antd";
 import { useState } from "react";
-import ImpactPieChart from "../components/charts/ImpactPieChart";
+import ImpactBarChart from "../components/charts/ImpactBarChart";
 import KPILineChart from "../components/charts/KPILineChart";
+import VariableKPIScatter from "../components/charts/VariableKPIScatter";
 import { useTheme } from "../contexts/ThemeContext";
 import { ReportService } from "../services/geminiReportService";
 import { PDFGenerator } from "../services/pdfGenerator";
@@ -203,143 +204,6 @@ export default function ReportGenerator() {
             style={{ marginTop: "16px" }}
           />
         )}
-
-        {jsonData && (
-          <Card
-            type="inner"
-            title="Loaded Data Summary"
-            style={{ marginTop: "16px" }}
-          >
-            <Row gutter={[24, 24]}>
-              <Col xs={24} md={12}>
-                <div style={{ marginBottom: "24px" }}>
-                  <div
-                    style={{
-                      fontSize: "14px",
-                      color: isDark
-                        ? "rgba(255, 255, 255, 0.45)"
-                        : "rgba(0, 0, 0, 0.45)",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    KPI
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "18px",
-                      fontWeight: 600,
-                      color: isDark
-                        ? "rgba(255, 255, 255, 0.85)"
-                        : "rgba(0, 0, 0, 0.85)",
-                    }}
-                  >
-                    {jsonData.data.simulated_summary.simulated_data[0]?.kpi ||
-                      "N/A"}
-                  </div>
-                </div>
-
-                <div style={{ marginBottom: "24px" }}>
-                  <div
-                    style={{
-                      fontSize: "14px",
-                      color: isDark
-                        ? "rgba(255, 255, 255, 0.45)"
-                        : "rgba(0, 0, 0, 0.45)",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    Total Scenarios
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "18px",
-                      fontWeight: 600,
-                      color: isDark
-                        ? "rgba(255, 255, 255, 0.85)"
-                        : "rgba(0, 0, 0, 0.85)",
-                    }}
-                  >
-                    {jsonData.data.simulated_summary.simulated_data.length}
-                  </div>
-                </div>
-
-                <div>
-                  <div
-                    style={{
-                      fontSize: "14px",
-                      color: isDark
-                        ? "rgba(255, 255, 255, 0.45)"
-                        : "rgba(0, 0, 0, 0.45)",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    KPI Range
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "18px",
-                      fontWeight: 600,
-                      color: isDark
-                        ? "rgba(255, 255, 255, 0.85)"
-                        : "rgba(0, 0, 0, 0.85)",
-                    }}
-                  >
-                    {Math.min(
-                      ...jsonData.data.simulated_summary.simulated_data.map(
-                        (s) => s.kpi_value
-                      )
-                    ).toFixed(2)}{" "}
-                    -{" "}
-                    {Math.max(
-                      ...jsonData.data.simulated_summary.simulated_data.map(
-                        (s) => s.kpi_value
-                      )
-                    ).toFixed(2)}
-                  </div>
-                </div>
-              </Col>
-
-              <Col xs={24} md={12}>
-                <div>
-                  <div
-                    style={{
-                      fontSize: "14px",
-                      color: isDark
-                        ? "rgba(255, 255, 255, 0.45)"
-                        : "rgba(0, 0, 0, 0.45)",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    Variables
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "16px",
-                      fontWeight: 600,
-                      color: isDark
-                        ? "rgba(255, 255, 255, 0.85)"
-                        : "rgba(0, 0, 0, 0.85)",
-                    }}
-                  >
-                    {jsonData.data.top_variables.map((v, index) => (
-                      <div
-                        key={index}
-                        style={{
-                          marginBottom:
-                            index < jsonData.data.top_variables.length - 1
-                              ? "8px"
-                              : 0,
-                        }}
-                      >
-                        {v.equipment} - {v.name}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </Col>
-            </Row>
-          </Card>
-        )}
       </Card>
 
       {jsonData && (
@@ -357,15 +221,30 @@ export default function ReportGenerator() {
                 hoverable
                 title={
                   <Space>
-                    <PieChartOutlined /> Variable Impact Distribution
+                    <PieChartOutlined /> Variable Impact Ranking
                   </Space>
                 }
               >
-                <ImpactPieChart data={jsonData.data} />
+                <ImpactBarChart data={jsonData.data} />
               </Card>
             </Col>
 
             <Col xs={24} lg={12}>
+              <Card
+                hoverable
+                title={
+                  <Space>
+                    <LineChartOutlined /> Variable-KPI Correlation
+                  </Space>
+                }
+              >
+                <VariableKPIScatter data={jsonData.data} />
+              </Card>
+            </Col>
+          </Row>
+
+          <Row gutter={[16, 16]} style={{ marginTop: "16px" }}>
+            <Col xs={24}>
               <Card
                 hoverable
                 title={
