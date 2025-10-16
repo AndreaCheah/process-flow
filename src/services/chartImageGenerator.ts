@@ -10,46 +10,66 @@ export class ChartImageGenerator {
     this.canvas.height = 400;
   }
 
-  async generateImpactPieChart(data: ExperimentData): Promise<string> {
-    const labels = Object.keys(data.top_impact);
-    const values = Object.values(data.top_impact);
+  async generateImpactBarChart(data: ExperimentData): Promise<string> {
+    // Combine setpoint and condition impacts to show ALL variables
+    const allImpacts: Record<string, number> = {};
+
+    // Add setpoint impacts
+    data.setpoint_impact_summary.forEach((item) => {
+      const key = `${item.equipment}.${item.setpoint}`;
+      allImpacts[key] = item.weightage;
+    });
+
+    // Add condition impacts
+    data.condition_impact_summary.forEach((item) => {
+      const key = `${item.equipment}.${item.condition}`;
+      allImpacts[key] = item.weightage;
+    });
+
+    // Sort by impact (descending)
+    const sortedImpact = Object.entries(allImpacts).sort(
+      ([, a], [, b]) => b - a
+    );
+
+    const labels = sortedImpact.map(([key]) => key);
+    const values = sortedImpact.map(([, value]) => value);
+
+    // Color code based on impact level
+    const getColor = (value: number) => {
+      if (value >= 40) return "#ff4d4f";
+      if (value >= 25) return "#faad14";
+      if (value >= 15) return "#52c41a";
+      return "#1890ff";
+    };
+
+    const backgroundColors = values.map((value) => getColor(value));
+    const borderColors = values.map((value) => getColor(value));
 
     const config: ChartConfiguration = {
-      type: "pie",
+      type: "bar",
       data: {
         labels: labels,
         datasets: [
           {
-            label: "Impact %",
+            label: "Impact (%)",
             data: values,
-            backgroundColor: [
-              "#FF6384",
-              "#36A2EB",
-              "#FFCE56",
-              "#4BC0C0",
-              "#9966FF",
-              "#FF9F40",
-            ],
-            borderColor: "#fff",
+            backgroundColor: backgroundColors,
+            borderColor: borderColors,
             borderWidth: 2,
           },
         ],
       },
       options: {
         responsive: false,
-        animation: false, 
+        animation: false,
+        indexAxis: "y",
         plugins: {
           legend: {
-            position: "right",
-            labels: {
-              font: {
-                size: 12,
-              },
-            },
+            display: false,
           },
           title: {
             display: true,
-            text: "Variable Impact Distribution (%)",
+            text: "Variable Impact Ranking",
             font: {
               size: 16,
               weight: "bold",
@@ -59,10 +79,40 @@ export class ChartImageGenerator {
             enabled: false,
           },
         },
+        scales: {
+          x: {
+            beginAtZero: true,
+            max: Math.max(...values) * 1.1,
+            title: {
+              display: true,
+              text: "Impact Weightage (%)",
+              font: {
+                size: 12,
+              },
+            },
+            ticks: {
+              font: {
+                size: 10,
+              },
+            },
+          },
+          y: {
+            ticks: {
+              font: {
+                size: 10,
+              },
+            },
+          },
+        },
       },
     };
 
-    return this.renderChartToImage(config);
+    // Use taller canvas for horizontal bar chart
+    this.canvas.height = 600;
+    const imageData = await this.renderChartToImage(config);
+    this.canvas.height = 400;
+
+    return imageData;
   }
 
   async generateKPILineChart(data: ExperimentData): Promise<string> {

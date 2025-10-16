@@ -79,8 +79,8 @@ export default function ReportGenerator() {
 
       setStatus("Generating charts...");
       const chartGen = new ChartImageGenerator();
-      const [pieChart, lineChart, comparisonChart] = await Promise.all([
-        chartGen.generateImpactPieChart(jsonData.data),
+      const [barChart, lineChart, comparisonChart] = await Promise.all([
+        chartGen.generateImpactBarChart(jsonData.data),
         chartGen.generateKPILineChart(jsonData.data),
         chartGen.generateScenarioComparisonChart(jsonData.data),
       ]);
@@ -91,7 +91,7 @@ export default function ReportGenerator() {
       setStatus("Creating PDF report...");
       const pdfGenerator = new PDFGenerator();
       pdfGenerator.generateReport(jsonData.data, insights, {
-        pieChart,
+        barChart,
         lineChart,
         comparisonChart,
       });
@@ -130,7 +130,7 @@ export default function ReportGenerator() {
               <Form.Item
                 label="Gemini API Key"
                 required
-                tooltip="Your Google Gemini API key for AI-powered insights"
+                tooltip="Your Google Gemini API key"
               >
                 <Input.Password
                   value={apiKey}
