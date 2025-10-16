@@ -230,7 +230,7 @@ export class PDFGenerator {
       let bottomSum = 0;
       let bottomCountVar = 0;
       bottomScenarios.forEach((scenario) => {
-        // Search through ALL equipment entries (there may be multiple with same name)
+        // Search through all equipment entries (there may be multiple with same name)
         const equipEntries = scenario.equipment_specification.filter(
           (e) => e.equipment === equipment
         );

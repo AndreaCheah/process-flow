@@ -326,13 +326,12 @@ export class ChartImageGenerator {
       setTimeout(() => {
         const imageData = tempCanvas.toDataURL("image/png");
         chart.destroy();
-        tempCanvas.remove(); // Clean up the temporary canvas
+        tempCanvas.remove();
         resolve(imageData);
       }, 100);
     });
   }
 
-  // Clean up resources
   destroy(): void {
     this.canvas.remove();
   }

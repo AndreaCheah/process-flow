@@ -11,7 +11,6 @@ import {
 } from 'chart.js';
 import type { ExperimentData } from '../../types/reportTypes';
 
-// Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 interface KPILineChartProps {

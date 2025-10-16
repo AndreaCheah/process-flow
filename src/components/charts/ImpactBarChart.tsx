@@ -17,7 +17,7 @@ interface ImpactBarChartProps {
 }
 
 export default function ImpactBarChart({ data }: ImpactBarChartProps) {
-  // Combine setpoint and condition impacts to show ALL variables
+  // Combine setpoint and condition impacts to show all variables
   const allImpacts: Record<string, number> = {};
 
   // Add setpoint impacts
